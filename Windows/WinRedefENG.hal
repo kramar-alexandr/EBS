@@ -1,0 +1,56 @@
+external inner function Boolean HasContactClassification();
+external inner function Boolean HasConsolidation();
+external inner function Boolean HasResourceDisplayGroups();
+external inner function Boolean HasModCRM();
+external inner function Boolean HasCategories();
+external inner function Boolean IsEnterprise();
+
+window ActPersRClass:3
+  wtag("language","ENG"), wtag("product","*"), wtag("productcode","*"), wtag("device","computer")
+begin
+  real h,v,vm,vs;
+  WindowBegin("Specify Activities, Persons",ActPersRClass,CGRcW,RcType);
+  SetWRect(20,80,450,390); //EBS edit
+  v = 6; vs = 20; h = 140;
+  PeriodField(h,v,"Period");
+  EditFieldTL(h,v+=vs, 150,"Person", M4UStr,Normal,50,f2,false,UserSClass);
+  if (HasResourceDisplayGroups) then begin
+    EditFieldTL(h,v+=vs, 60,"Display Group", M4UStr,Normal,10,AccStr,false,CalDispGroupSClass);
+  end;
+  EditFieldTL(h,v+=vs,150,"Customers",   M4UStr,Normal,50,f1,false,AllCUSClass);
+  EditFieldTL(h,v+=vs,60,"Project",   M4Code,Normal,50,f4,false,PRSClass); //EBS added
+  if (HasContactClassification) then begin
+    EditFieldTL(h,v+=vs, 60,"Cust. Classification", M4UStr,Normal,30,Stext,false,CClassSClass);
+  end;
+  if (HasCategories) then begin
+    EditFieldTL(h,v+=vs,50,"Cust. Category",M4UStr,Normal,5,f7,false,CCatSClass);
+  end;  
+  EditFieldTL(h,v+=vs, 60,"Activity Type", M4UStr,Normal,5,f3,false,ActTypeSClass);
+  EditFieldTL(h,v+=vs, 60,"Activity Class", M4UStr,Normal,11,FirstAcc,false,ActTypeGrSClass);
+  ButtonFrame(h=50,vm=(v+=41),123,2,"Function");
+  RadioButton(h,v,0,0,"Overview",ArtMode);
+  RadioButton(h,v+=17,1,0,"Detailed",ArtMode);
+  ButtonFrame(h=200,v=vm,123,2,"Specify");
+  CheckBox(h,v,0,"D_one",flags[1]);
+  CheckBox(h,v+=17,0,"Not Done",flags[2]);
+  ButtonFrame(h=50,vm=(v+=48),123,4,"Task Type");
+  CheckBox(h,v,0,"Calendar ",flags[3]);
+  CheckBox(h,v+=17,0,"To _Do",flags[4]);
+  CheckBox(h,v+=17,0,"Tim_ed To Do",flags[5]);
+  if (HasModCRM) then begin
+    CheckBox(h,v+=17,0,"Work Hours",flags[10]);
+  end;
+  EndFrame;
+
+  ButtonFrame(h=200,v=vm,123,3,"Calendar Types");
+  CheckBox(h,v,0,"Time",flags[7]);
+  CheckBox(h,v+=16,0,"Profile",flags[8]);
+  CheckBox(h,v+=16,0,"Don't Show",flags[9]);
+  if (IsEnterprise) then begin
+    CheckBox(h=200,v=(vm+60),0,"Show Cust. instead of Contact Name",flags[6]);
+  end;
+  if (HasConsolidation) then begin
+    CheckBox(h,v+=16,0,"Include All Companies",IncDaughter);
+  end;
+  EndWindow;
+end;

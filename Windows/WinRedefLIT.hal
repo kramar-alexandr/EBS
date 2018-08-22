@@ -1,0 +1,60 @@
+external inner function Boolean HasContactClassification();
+external inner function Boolean HasConsolidation();
+external inner function Boolean HasResourceDisplayGroups();
+external inner function Boolean HasModCRM();
+external inner function Boolean HasCategories();
+external inner function Boolean IsEnterprise();
+
+SetLangMode(LangLithuanian,"LIT",0);
+
+window ActPersRClass:3
+  wtag("language","LIT"), wtag("product","*"), wtag("productcode","*"), wtag("device","computer")
+begin
+  real h,v,vm,vs;
+  WindowBegin("Veiklos, asmenys",ActPersRClass,CGRcW,RcType);
+  SetWRect(20,80,450,370);
+  v = 6; vs = 20; h = 140;
+  PeriodField(h,v,"Periodas");
+  EditFieldTL(h,v+=vs, 150,"Asmuo", M4UStr,Normal,50,f2,false,UserSClass);
+  if (HasResourceDisplayGroups) then begin
+  EditFieldTL(h,v+=vs, 60,"Atvaizdav. grup˜", M4UStr,Normal,10,AccStr,false,CalDispGroupSClass);
+  end;
+  EditFieldTL(h,v+=vs,150,"Pirk˜jai",   M4UStr,Normal,50,f1,false,AllCUSClass);
+  if (HasContactClassification) then begin
+  	EditFieldTL(h,v+=vs, 60,"Pirk˜j÷ klas˜", M4UStr,Normal,30,Stext,false,CClassSClass);
+  end;
+  if (HasCategories) then begin
+    EditFieldTL(h,v+=vs,50,"Pirk. kategorija",M4UStr,Normal,5,f7,false,CCatSClass);
+  end;  
+  EditFieldTL(h,v+=vs, 60,"Veikl÷ tipai", M4UStr,Normal,5,f3,false,ActTypeSClass);
+  EditFieldTL(h,v+=vs, 60,"Veikl÷ klas˜", M4UStr,Normal,11,FirstAcc,false,ActTypeGrSClass);
+  ButtonFrame(h=50,vm=(v+=41),123,2,"Funkcija");
+  RadioButton(h,v,0,0,"Perìiðra",ArtMode);
+  RadioButton(h,v+=17,1,0,"Detaliai",ArtMode);
+  ButtonFrame(h=200,v=vm,123,2,"¯traukti");
+  CheckBox(h,v,0,"Patvirtinta",flags[1]);
+  CheckBox(h,v+=17,0,"Nepatvirtinta",flags[2]);
+  ButtonFrame(h=50,vm=(v+=48),123,4,"Uìduoties tipas");
+  CheckBox(h,v,0,"Kalendorius ",flags[3]);
+  CheckBox(h,v+=17,0,"Uìduotis",flags[4]);
+  CheckBox(h,v+=17,0,"Uìduotis laike",flags[5]);
+  if (HasModCRM) then begin
+  CheckBox(h,v+=17,0,"Darbo val.",flags[10]); 
+  end;
+  EndFrame;
+  
+  ButtonFrame(h=200,v=vm,123,3,"Kalendoriaus tipas");
+  CheckBox(h,v,0,"Laikas",flags[7]);
+  CheckBox(h,v+=16,0,"Profilis",flags[8]);
+  CheckBox(h,v+=16,0,"Nerodyti",flags[9]);
+  if (IsEnterprise) then begin
+  CheckBox(h=200,v=(vm+60),0,"Rodyti pirk˜jo inf. vietoje kontakto",flags[6]);
+  end;
+  if (HasConsolidation) then begin
+    CheckBox(h,v+=16,0,"¯traukti visas °mones",IncDaughter); 
+  end;
+  EndWindow;
+end;
+
+
+
